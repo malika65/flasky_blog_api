@@ -33,13 +33,16 @@ moment = Moment(app)
 #Flask-Mail is initialized
 mail = Mail(app)
 
-#configure the application to send email through a Google Gmail account
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
+app.config['FLASKY_MAIL_SENDER'] = 'Flasky Admin <flasky@example.com>'
 
+#function can render email bodies from Jinja2 templates to have the most flexibility
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
 
 class NameForm(FlaskForm):
     #The DataRequired() validator ensures that the field is not submitted empty
@@ -111,5 +114,5 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+    # if __name__ == '__main__':
+    #     app.run(debug=True)
