@@ -16,10 +16,12 @@ class Config:
     FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>' or config('FLASKY_MAIL_SENDER',default='')
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN') or config('FLASKY_ADMIN',default='')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    FLASK_ENV = config('FLASK_ENV',default='')
+    FLASK_APP = config('FLASK_APP',default='')
 
-@staticmethod
-def init_app(app):
-    pass
+    @staticmethod
+    def init_app(app):
+        pass
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -34,6 +36,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
 
 config = {
     'development': DevelopmentConfig,

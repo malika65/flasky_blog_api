@@ -1,5 +1,3 @@
-from flask import current_app, request, url_for
-
 from . import db
 
 class Role(db.Model):
